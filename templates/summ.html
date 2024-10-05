@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container"> 
+    <h1>Python Scraper</h1>
+    <form method="POST" action="/summ">
+        <label for="url">Введите URL:</label>
+        <input type="text" id="url" name="url" placeholder="https://example.com" required class="input-field">
+        <button type="submit" class="submit-button">Парсить</button>
+    </form>
+    {% if title %}
+        <h2>Результаты:</h2>
+        <div>
+            <h3>Суммаризация:</h3>
+            <p>{{ summary }}</p>
+        </div>
+        <p><strong>Заголовок:</strong> {{ title }}</p>
+        <h3>Изображения:</h3>
+        <ul>
+            {% for image in images %}
+                <li><img src="{{ image }}" alt="Image"></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой сайт</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> 
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Главная</a></li>
+            <li><a href="/summ" class="{% if request.path == '/summ' %}active{% endif %}">Суммаризатор</a></li>
+            <li><a href="/draw" class="{% if request.path == '/draw' %}active{% endif %}">Генератор изображений</a></li>
+            <li><a href="/chat" class="{% if request.path == '/chat' %}active{% endif %}">Чат с ИИ</a></li>
+        </ul>
+    </nav>
+
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+
+    
+</body>
+</html>

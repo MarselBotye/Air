@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- загрузка изображения -->
+    <div class="container">
+        <h1>Генератор изображений</h1>
+        <form id="generate-form">
+            <label for="prompt">Введите описание:</label>
+            <textarea id="prompt" name="prompt" rows="4" placeholder="Введите описание для генерации изображения..."></textarea>
+            <button type="submit">Сгенерировать</button>
+        </form>
+        <div id="result">
+            <div id="loading" style="display: none;">Загрузка...</div> <img id="generated-image" src="" alt="Сгенерированное изображение" style="display: none;">
+        </div>
+    </div>
+
+    <script>
+       document.getElementById('generate-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const prompt = document.getElementById('prompt').value;
+            const imageElement = document.getElementById('generated-image');
+            const loadingElement = document.getElementById('loading'); 
+            const submitButton = document.querySelector('#generate-form button[type="submit"]');
+
+            loadingElement.style.display = 'block';
+            imageElement.style.display = 'none';
+            submitButton.disabled = true; 
+
+            fetch('/draw/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `prompt=${encodeURIComponent(prompt)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                imageElement.src = `data:image/png;base64,${data.image}`;
+                imageElement.style.display = 'block';
+                loadingElement.style.display = 'none';
+                submitButton.disabled = false; 
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                loadingElement.style.display = 'none';
+                submitButton.disabled = false; 
+            });
+        });
+    </script>
+{% endblock %}

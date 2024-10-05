@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Чат с ИИ</h1>
+    <div id="chat-window">
+        </div>
+    <form id="message-form">
+        <input type="text" id="message-input" placeholder="Введите сообщение...">
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const messageForm = document.getElementById('message-form');
+    const messageInput = document.getElementById('message-input');
+
+    messageForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const userMessage = messageInput.value;
+        messageInput.value = '';
+
+        appendMessage('user', userMessage);
+
+        fetch('/process_input', { // Измененный маршрут
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `message=${encodeURIComponent(userMessage)}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage('bot', data.response);
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
+
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message', `${sender}-message`);
+        messageElement.innerHTML = message;  //  Используем  innerHTML
+        chatWindow.appendChild(messageElement);
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>  
+{% endblock %}
